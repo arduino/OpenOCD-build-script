@@ -16,6 +16,6 @@ then
 	cd -
 fi
 
-rm -rf libusb-1.0.18 *-build
+rm -rf libusb-1.0.18 libusb-compat-0.1.4 *-build
 
 
