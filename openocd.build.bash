@@ -24,7 +24,7 @@ CFLAGS="-w -O2 $CFLAGS" CXXFLAGS="-w -O2 $CXXFLAGS" LDFLAGS="$LDFLAGS" ../OpenOC
 	HIDAPI_CFLAGS=-I${PREFIX}/include/hidapi \
 	LIBUSB0_LIBS="-L${PREFIX}/lib -lusb" \
 	LIBUSB1_LIBS="-L${PREFIX}/lib -lusb-1.0" \
-	HIDAPI_LIBS="-L${PREFIX}/lib -lhidapi"
+	HIDAPI_LIBS="-L${PREFIX}/lib ${HIDAPI_LDFLAGS}"
 
 if [ -z "$MAKE_JOBS" ]; then
 	MAKE_JOBS="4"

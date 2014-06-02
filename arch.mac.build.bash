@@ -1,6 +1,10 @@
 #!/bin/bash
 
-CFLAGS="-arch x86_64 -arch i386 -mmacosx-version-min=10.5" CXXFLAGS="-arch x86_64 -arch i386 -mmacosx-version-min=10.5" LDFLAGS="-arch x86_64 -arch i386" ./build.all.bash
+CFLAGS="-arch x86_64 -arch i386 -mmacosx-version-min=10.5" \
+CXXFLAGS="-arch x86_64 -arch i386 -mmacosx-version-min=10.5" \
+LDFLAGS="-arch x86_64 -arch i386" \
+HIDAPI_LDFLAGS="-lhidapi" \
+./build.all.bash
 
 if [[ -f objdir/bin/openocd ]] ;
 then
