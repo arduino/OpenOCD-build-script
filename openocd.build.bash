@@ -2,7 +2,7 @@
 
 if [[ ! -d OpenOCD ]] ;
 then
-	git clone git@github.com:arduino/OpenOCD.git
+	git clone git@github.com:arduino/OpenOCD.git -b arduino
 fi
 
 cd OpenOCD
