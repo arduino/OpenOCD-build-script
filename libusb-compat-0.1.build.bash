@@ -16,6 +16,8 @@ mkdir -p libusb-compat-build
 cd libusb-compat-build
 
 ../libusb-compat-0.1.4/configure \
+	LIBUSB_1_0_CFLAGS=-I${PREFIX}/include/libusb-1.0 \
+	LIBUSB_1_0_LIBS="-L${PREFIX}/lib -lusb-1.0" \
 	--prefix=$PREFIX
 
 #	--disable-shared \
