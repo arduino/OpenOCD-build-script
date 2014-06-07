@@ -12,3 +12,6 @@ then
 	cd -
 fi
 
+mv objdir OpenOCD-0.9.0-dev-arduino
+tar cfvj OpenOCD-0.9.0-dev-arduino-x86_64-linux-gnu.tar.bz2 OpenOCD-0.9.0-dev-arduino
+
