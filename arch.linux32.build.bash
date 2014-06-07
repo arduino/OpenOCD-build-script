@@ -12,3 +12,8 @@ then
 	cd -
 fi
 
+ARCH=`gcc -v 2>&1 | awk '/Target/ { print $2 }'`
+
+mv objdir OpenOCD-0.9.0-dev-arduino
+tar cfvj OpenOCD-0.9.0-dev-arduino-$ARCH.tar.bz2 OpenOCD-0.9.0-dev-arduino
+
