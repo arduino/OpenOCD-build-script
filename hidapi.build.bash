@@ -17,10 +17,14 @@ cd -
 mkdir -p hidapi-build
 cd hidapi-build
 
-../hidapi/configure \
-	libusb_CFLAGS="-I${PREFIX}/include/libusb-1.0" \
-	libusb_LIBS="-L${PREFIX}/lib -lusb-1.0" \
-	--prefix=$PREFIX
+if [[ x$USE_LOCAL_LIBUSB == xyes ]];
+then
+	../hidapi/configure --prefix=$PREFIX \
+		libusb_CFLAGS="-I${PREFIX}/include/libusb-1.0" \
+		libusb_LIBS="-L${PREFIX}/lib -lusb-1.0"
+else
+	../hidapi/configure --prefix=$PREFIX
+fi
 
 if [ -z "$MAKE_JOBS" ]; then
 	MAKE_JOBS="2"

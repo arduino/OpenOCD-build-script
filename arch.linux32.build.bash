@@ -1,10 +1,19 @@
 #!/bin/bash -ex
 
-CFLAGS="-m32" CXXFLAGS="-m32" HIDAPI_LDFLAGS="-lhidapi-libusb" ./build.all.bash
+export CFLAGS="-m32"
+export CXXFLAGS="-m32"
+export HIDAPI_LDFLAGS="-lhidapi-libusb"
+
+./clean.bash
+rm -rf objdir
+
+./hidapi.build.bash
+./openocd.build.bash
 
 if [[ -f objdir/bin/openocd ]] ;
 then
 	cd objdir/bin
+	strip --strip-all openocd
 	mv openocd openocd.bin
 	echo "#!/bin/bash" >> openocd
 	echo "LD_LIBRARY_PATH=\"\$(dirname \$0)/../lib\" \$0.bin \"\$1\" \"\$2\" \"\$3\" \"\$4\" \"\$5\" \"\$6\" \"\$7\" \"\$8\"" >> openocd
