@@ -17,13 +17,17 @@ cd -
 mkdir -p openocd-build
 cd openocd-build
 
+#CFLAGS="-w -O2 $CFLAGS" CXXFLAGS="-w -O2 $CXXFLAGS" LDFLAGS="$LDFLAGS" ../OpenOCD/configure \
+#	--prefix=$PREFIX \
+#	LIBUSB0_CFLAGS=-I${PREFIX}/include/ \
+#	LIBUSB1_CFLAGS=-I${PREFIX}/include/libusb-1.0 \
+#	HIDAPI_CFLAGS=-I${PREFIX}/include/hidapi \
+#	LIBUSB0_LIBS="-L${PREFIX}/lib -lusb" \
+#	LIBUSB1_LIBS="-L${PREFIX}/lib -lusb-1.0" \
+#	HIDAPI_LIBS="-L${PREFIX}/lib ${HIDAPI_LDFLAGS}"
 CFLAGS="-w -O2 $CFLAGS" CXXFLAGS="-w -O2 $CXXFLAGS" LDFLAGS="$LDFLAGS" ../OpenOCD/configure \
 	--prefix=$PREFIX \
-	LIBUSB0_CFLAGS=-I${PREFIX}/include/ \
-	LIBUSB1_CFLAGS=-I${PREFIX}/include/libusb-1.0 \
 	HIDAPI_CFLAGS=-I${PREFIX}/include/hidapi \
-	LIBUSB0_LIBS="-L${PREFIX}/lib -lusb" \
-	LIBUSB1_LIBS="-L${PREFIX}/lib -lusb-1.0" \
 	HIDAPI_LIBS="-L${PREFIX}/lib ${HIDAPI_LDFLAGS}"
 
 if [ -z "$MAKE_JOBS" ]; then
