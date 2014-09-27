@@ -7,18 +7,16 @@ export HIDAPI_LDFLAGS="-lhidapi-libusb"
 ./clean.bash
 rm -rf objdir
 
-./hidapi.build.bash
+./libusb.build.bash
+USE_LOCAL_LIBUSB=yes ./hidapi.build.bash
 ./openocd.build.bash
 
 if [[ -f objdir/bin/openocd ]] ;
 then
-	cd objdir/bin
-	strip --strip-all openocd
-	mv openocd openocd.bin
-	echo "#!/bin/bash" >> openocd
-	echo "LD_LIBRARY_PATH=\"\$(dirname \$0)/../lib\" \$0.bin \"\$1\" \"\$2\" \"\$3\" \"\$4\" \"\$5\" \"\$6\" \"\$7\" \"\$8\"" >> openocd
-	chmod +x openocd
-	cd -
+	strip --strip-all objdir/bin/openocd
+	mv objdir/bin/openocd objdir/bin/openocd.bin
+	cp launchers/openocd.linux objdir/bin/openocd
+	chmod +x objdir/bin/openocd
 fi
 
 ARCH=`gcc -v 2>&1 | awk '/Target/ { print $2 }'`
