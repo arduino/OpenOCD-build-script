@@ -18,9 +18,9 @@ then
   exit 1
 fi
 
-if [[ $OS == "Msys" ]] ;
+if [[ $OS == "Msys" || $OS == "Cygwin" ]] ;
 then
-  ./arch.windows.build.bash
+  ./arch.win32.build.bash
   exit 0
 fi
 
