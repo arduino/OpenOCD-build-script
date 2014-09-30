@@ -1,6 +1,6 @@
 #!/bin/bash
 
-OS=`uname -o`
+OS=`uname -o || uname`
 
 if [[ $OS == "GNU/Linux" ]] ;
 then
@@ -21,6 +21,12 @@ fi
 if [[ $OS == "Msys" || $OS == "Cygwin" ]] ;
 then
   ./arch.win32.build.bash
+  exit 0
+fi
+
+if [[ $OS == "Darwin" ]] ;
+then
+  ./arch.mac.build.bash
   exit 0
 fi
 
