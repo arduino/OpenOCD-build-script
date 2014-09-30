@@ -1,10 +1,17 @@
 #!/bin/bash
 
-CFLAGS="-arch x86_64 -arch i386 -mmacosx-version-min=10.5" \
-CXXFLAGS="-arch x86_64 -arch i386 -mmacosx-version-min=10.5" \
-LDFLAGS="-arch x86_64 -arch i386" \
-HIDAPI_LDFLAGS="-lhidapi" \
-./build.all.bash
+export CFLAGS="-arch x86_64 -arch i386 -mmacosx-version-min=10.5"
+export CXXFLAGS="-arch x86_64 -arch i386 -mmacosx-version-min=10.5"
+export LDFLAGS="-arch x86_64 -arch i386"
+export HIDAPI_LDFLAGS="-lhidapi"
+
+./clean.bash
+rm -rf objdir
+
+./libusb.build.bash
+./libusb-compat-0.1.build.bash
+USE_LOCAL_LIBUSB=yes ./hidapi.build.bash
+USE_LOCAL_LIBUSB=yes ./openocd.build.bash
 
 if [[ -f objdir/bin/openocd ]] ;
 then

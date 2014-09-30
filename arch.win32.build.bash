@@ -1,6 +1,16 @@
 #!/bin/bash -ex
 
-CFLAGS="-m32" CXXFLAGS="-m32" HIDAPI_LDFLAGS="-lhidapi" ./build.all.bash
+export CFLAGS=-m32
+export CXXFLAGS=-m32
+export HIDAPI_LDFLAGS=-lhidapi
+
+./clean.bash
+rm -rf objdir
+
+./libusb.build.bash
+./libusb-compat-0.1.build.bash
+USE_LOCAL_LIBUSB=yes ./hidapi.build.bash
+USE_LOCAL_LIBUSB=yes ./openocd.build.bash
 
 cp /cygdrive/c/cygwin/bin/cygwin1.dll objdir/bin
 cp /cygdrive/c/cygwin/bin/cyggcc_s-1.dll objdir/bin
