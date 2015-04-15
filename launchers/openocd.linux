@@ -18,11 +18,11 @@ for i in "${paths[@]}"
 do
   if [ -f $i ]
   then
-    ln -sf "$i" $MYAPP_HOME/lib/libudev.so.0
+    ln -sf "$i" "$MYAPP_HOME/lib/libudev.so.0"
     break
   fi
 done
 
 # Launch openocd but use the libs bundled inside the app
-LD_LIBRARY_PATH="$MYAPP_HOME/lib" $0.bin "$1" "$2" "$3" "$4" "$5" "$6" "$7" "$8" "$9"
+LD_LIBRARY_PATH="$MYAPP_HOME/lib" "$0.bin" "$1" "$2" "$3" "$4" "$5" "$6" "$7" "$8" "$9"
 
