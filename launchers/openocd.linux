@@ -9,10 +9,11 @@ MYAPP_HOME="`dirname "$MYAPP_WRAPPER"`"/..
 
 # Search for libudev.so.1 and create a simlink named libudev.so.0 to satisfy openocd
 paths=(
-  "/lib/x86_64-linux-gnu/libudev.so.1" # Ubuntu, Xubuntu, Mint
-  "/usr/lib64/libudev.so.1"            # SUSE, Fedora
-  "/usr/lib/libudev.so.1"              # Arch, Fedora 32bit
-  "/lib/i386-linux-gnu/libudev.so.1"   # Ubuntu 32bit
+  "/lib/x86_64-linux-gnu/libudev.so.1"    # Ubuntu, Xubuntu, Mint
+  "/usr/lib64/libudev.so.1"               # SUSE, Fedora
+  "/usr/lib/libudev.so.1"                 # Arch, Fedora 32bit
+  "/lib/i386-linux-gnu/libudev.so.1"      # Ubuntu 32bit
+  "/lib/arm-linux-gnueabihf/libudev.so.1" # Raspbian ARM
 )
 for i in "${paths[@]}"
 do
