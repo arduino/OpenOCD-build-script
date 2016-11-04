@@ -14,6 +14,11 @@ then
     ./arch.linux32.build.bash
     exit 0
   fi
+
+  if [[ $MACHINE =~ "arm" ]] ; then
+    ./arch.arm.build.bash
+    exit 0
+  fi
   echo Linux Machine not supported: $MACHINE
   exit 1
 fi
