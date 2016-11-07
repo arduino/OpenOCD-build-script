@@ -1,6 +1,6 @@
 #!/bin/bash -ex
 
-export CFLAGS=-m32
+export CFLAGS="-m32 -mno-ms-bitfields"
 export CXXFLAGS=-m32
 export HIDAPI_LDFLAGS=-lhidapi
 
