@@ -22,11 +22,11 @@ export TARGET_OS=$OS
 
 if [[ $CROSS_COMPILE == "mingw" ]] ; then
 
-./compile_windows_openocd.sh
+./compile_win_openocd.sh
 
 else
 
-./compile_linux_opencod.sh
+./compile_linux_openocd.sh
 
 fi
 
