@@ -1,0 +1,3 @@
+[submodule "OpenOCD"]
+	path = OpenOCD
+	url = ./OpenOCD
