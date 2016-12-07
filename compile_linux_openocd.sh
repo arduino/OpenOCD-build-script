@@ -29,7 +29,7 @@ if [[ ${ARCH} != *darwin* ]]; then
 cd eudev-3.1.5
 export UDEV_DIR=`pwd`
 ./autogen.sh
-./configure --enable-static --disable-shared --disable-blkid --disable-kmod
+./configure --enable-static --disable-shared --disable-blkid --disable-kmod  --disable-manpages
 make clean
 make -j4
 cd ..
@@ -43,15 +43,11 @@ make clean
 make
 cd ..
 
-#cd kmod-22
-#export KMOD_DIR=`pwd`
-#./configure --host=arm-linux-gnueabihf
-#make clean
-#make -j4
-#cd ..
+export LIBUSB1_CFLAGS="-I$LIBUSB_DIR/libusb/"
+export LIBUSB1_LIBS="-L$LIBUSB_DIR/libusb/.libs/ -lusb-1.0 -lpthread"
 
-#export KMOD_CFLAGS="-I$KMOD_DIR/libkmod/"
-#export KMOD_LIBS="-L$KMOD_DIR/libkmod/.libs/ -lkmod"
+export LIBUSB_1_0_CFLAGS="-I$LIBUSB_DIR/libusb/"
+export LIBUSB_1_0_LIBS="-L$LIBUSB_DIR/libusb/.libs/ -lusb-1.0 -lpthread"
 
 cd libusb-compat-0.1.5
 export LIBUSB0_DIR=`pwd`
