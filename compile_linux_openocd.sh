@@ -36,6 +36,10 @@ cd ..
 
 fi
 
+export CFLAGS="-I$UDEV_DIR/src/libudev/"
+export LDFLAGS="-L$UDEV_DIR/src/libudev/.libs/"
+export LIBS="-ludev"
+
 cd libusb-1.0.20
 export LIBUSB_DIR=`pwd`
 ./configure --enable-static --disable-shared
