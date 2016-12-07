@@ -24,6 +24,8 @@ cd -
 #disable pkg-config
 export PKG_CONFIG_PATH=`pwd`
 
+if [[ ${ARCH} != *darwin* ]]; then
+
 cd eudev-3.1.5
 export UDEV_DIR=`pwd`
 ./autogen.sh
@@ -31,6 +33,8 @@ export UDEV_DIR=`pwd`
 make clean
 make -j4
 cd ..
+
+fi
 
 cd libusb-1.0.20
 export LIBUSB_DIR=`pwd`
