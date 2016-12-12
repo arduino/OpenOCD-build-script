@@ -89,12 +89,10 @@ export HIDAPI_LIBS="-L$HIDAPI_DIR/linux/.libs/ -L$HIDAPI_DIR/libusb/.libs/ -lhid
 else
 
 export HIDAPI_LIBS="-L$HIDAPI_DIR/mac/.libs/ -L$HIDAPI_DIR/libusb/.libs/ -lhidapi"
-#get rid of pedantic clang error
-export CLAGS="$CFLAGS -Wno-error=unused-command-line-argument"
 fi
 
 export CFLAGS="-DHAVE_LIBUSB_ERROR_NAME"
-PKG_CONFIG_PATH=`pwd` ./configure --prefix=$PREFIX
+PKG_CONFIG_PATH=`pwd` ./configure --disable-werror --prefix=$PREFIX
 make clean
 CFLAGS=-static make
 make install
