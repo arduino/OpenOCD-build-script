@@ -89,7 +89,8 @@ export HIDAPI_LIBS="-L$HIDAPI_DIR/linux/.libs/ -L$HIDAPI_DIR/libusb/.libs/ -lhid
 else
 
 export HIDAPI_LIBS="-L$HIDAPI_DIR/mac/.libs/ -L$HIDAPI_DIR/libusb/.libs/ -lhidapi"
-
+#get rid of pedantic clang error
+export CLAGS="$CFLAGS -Wno-error=unused-command-line-argument"
 fi
 
 export CFLAGS="-DHAVE_LIBUSB_ERROR_NAME"
