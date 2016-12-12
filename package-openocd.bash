@@ -26,7 +26,7 @@ if [[ $CROSS_COMPILE == "mingw" ]] ; then
 
 else
 
-./compile_linux_openocd.sh
+./compile_unix_openocd.sh
 
 fi
 
