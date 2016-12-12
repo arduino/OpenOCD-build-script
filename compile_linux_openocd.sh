@@ -81,7 +81,17 @@ export LIBUSB0_LIBS="-L$LIBUSB0_DIR/libusb/.libs/ -lusb -lpthread"
 export LIBUSB1_CFLAGS="-I$LIBUSB_DIR/libusb/" 
 export LIBUSB1_LIBS="-L$LIBUSB_DIR/libusb/.libs/ -lusb-1.0 -lpthread" 
 export HIDAPI_CFLAGS="-I$HIDAPI_DIR/hidapi/"
+
+if [[ ${ARCH} != *darwin* ]]; then
+
 export HIDAPI_LIBS="-L$HIDAPI_DIR/linux/.libs/ -L$HIDAPI_DIR/libusb/.libs/ -lhidapi-hidraw -lhidapi-libusb" 
+
+else
+
+export HIDAPI_LIBS="-L$HIDAPI_DIR/mac/.libs/ -L$HIDAPI_DIR/libusb/.libs/ -lhidapi"
+
+fi
+
 export CFLAGS="-DHAVE_LIBUSB_ERROR_NAME"
 PKG_CONFIG_PATH=`pwd` ./configure --prefix=$PREFIX
 make clean
