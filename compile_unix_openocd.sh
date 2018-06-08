@@ -91,7 +91,11 @@ else
 export HIDAPI_LIBS="-L$HIDAPI_DIR/mac/.libs/ -L$HIDAPI_DIR/libusb/.libs/ -lhidapi"
 fi
 
-OPENOCD_COMPILE_SWITCHES="--enable-remote-bitbang --enable-stlink --enable-usb-blaster-2 --enable-ti-icdi --enable-jlink --enable-usbprog --enable-cmsis-dap --enable-jtag_vpi --enable-ioutil --enable-bcm2835gpio --enable-remote-bitbang --enable-sysfsgpio --enable-buspirate"
+OPENOCD_COMPILE_SWITCHES="--enable-remote-bitbang --enable-stlink --enable-usb-blaster-2 --enable-ti-icdi --enable-jlink --enable-usbprog --enable-cmsis-dap --enable-jtag_vpi --enable-ioutil"
+
+if [[ ${ARCH} != *darwin* ]]; then
+OPENOCD_COMPILE_SWITCHES=$OPENOCD_COMPILE_SWITCHES --enable-sysfsgpio
+fi
 
 export CFLAGS="-DHAVE_LIBUSB_ERROR_NAME"
 PKG_CONFIG_PATH=`pwd` ./configure $OPENOCD_COMPILE_SWITCHES --disable-werror --prefix=$PREFIX
