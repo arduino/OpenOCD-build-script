@@ -78,7 +78,7 @@ make clean
 make -j4
 cd ..
 
-OPENOCD_COMPILE_SWITCHES="--enable-remote-bitbang --enable-stlink --enable-usb-blaster-2 --enable-ti-icdi --enable-jlink --enable-usbprog --enable-cmsis-dap --enable-parport --enable-jtag_vpi --enable-ioutil --enable-bcm2835gpio --enable-remote-bitbang --enable-sysfsgpio"
+OPENOCD_COMPILE_SWITCHES="--enable-remote-bitbang --enable-stlink --enable-usb-blaster-2 --enable-ti-icdi --enable-jlink --enable-usbprog --enable-cmsis-dap --enable-ioutil"
 
 cd OpenOCD
 ./bootstrap
