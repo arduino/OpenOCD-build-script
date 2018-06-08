@@ -20,7 +20,7 @@ OUTPUT_VERSION=0.10.0-arduino7-static
 export OS=`uname -o || uname`
 export TARGET_OS=$OS
 
-if [ -f tools ]; then
+if [ -d tools ]; then
 rm -rf tools
 fi
 
