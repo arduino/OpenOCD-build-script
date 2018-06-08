@@ -78,6 +78,8 @@ make clean
 make -j4
 cd ..
 
+OPENOCD_COMPILE_SWITCHES="--enable-remote-bitbang --enable-stlink --enable-usb-blaster-2 --enable-ti-icdi --enable-jlink --enable-usbprog --enable-cmsis-dap --enable-parport --enable-jtag_vpi --enable-ioutil --enable-bcm2835gpio --enable-remote-bitbang --enable-sysfsgpio --enable-buspirate"
+
 cd OpenOCD
 ./bootstrap
 export LIBUSB0_CFLAGS="-I$LIBUSB0_DIR/libusb/"
@@ -87,7 +89,7 @@ export LIBUSB1_LIBS="-L$LIBUSB_DIR/libusb/.libs/ -lusb-1.0 -lpthread"
 export HIDAPI_CFLAGS="-I$HIDAPI_DIR/hidapi/"
 export HIDAPI_LIBS="-L$HIDAPI_DIR/windows/.libs/ -L$HIDAPI_DIR/libusb/.libs/ -lhidapi" 
 export CFLAGS="-DHAVE_LIBUSB_ERROR_NAME"
-PKG_CONFIG_PATH=`pwd` ./configure --host=i686-w64-mingw32 --disable-jtag_vpi --prefix=$PREFIX
+PKG_CONFIG_PATH=`pwd` ./configure --host=i686-w64-mingw32 $OPENOCD_COMPILE_SWITCHES --disable-jtag_vpi --prefix=$PREFIX
 make clean
 CFLAGS=-static make
 make install
