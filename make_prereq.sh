@@ -25,10 +25,16 @@ cd libtool-2.4.6
 ./configure --prefix=$PREFIX
 make install
 cd ..
+#wget --no-check-certificate https://ftp.gnome.org/pub/gnome/sources/glib/2.16/glib-2.16.6.tar.gz
+#tar xvf glib-2.16.6.tar.gz
+#cd glib-2.16.6
+#./configure --prefix=$PREFIX
+#make install
+#cd ..
 wget --no-check-certificate https://pkgconfig.freedesktop.org/releases/pkg-config-0.29.2.tar.gz
 tar xvf pkg-config-0.29.2.tar.gz
 cd pkg-config-0.29.2
-./configure --prefix=$PREFIX
+./configure --prefix=$PREFIX --with-internal-glib
 make install
 cd ..
 
