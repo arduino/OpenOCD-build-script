@@ -94,7 +94,7 @@ fi
 OPENOCD_COMPILE_SWITCHES="--enable-remote-bitbang --enable-stlink --enable-usb-blaster-2 --enable-ti-icdi --enable-jlink --enable-usbprog --enable-cmsis-dap --enable-jtag_vpi --enable-ioutil"
 
 if [[ ${ARCH} != *darwin* ]]; then
-OPENOCD_COMPILE_SWITCHES=$OPENOCD_COMPILE_SWITCHES --enable-sysfsgpio
+OPENOCD_COMPILE_SWITCHES="$OPENOCD_COMPILE_SWITCHES --enable-sysfsgpio"
 fi
 
 export CFLAGS="-DHAVE_LIBUSB_ERROR_NAME"
