@@ -24,6 +24,9 @@ if [ -f tools ]; then
 rm -rf tools
 fi
 
+./make_prereq.sh
+export PATH=$PWD/tools/bin:$PATH
+
 if [[ $CROSS_COMPILE == "mingw" ]] ; then
 
 ./compile_win_openocd.sh
