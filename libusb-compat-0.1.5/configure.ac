@@ -1,4 +1,4 @@
-AC_INIT([libusb-compat], [0.1.5])
+AC_INIT([libusb-compat], [0.1.6-rc2])
 AM_INIT_AUTOMAKE
 AC_CONFIG_SRCDIR([libusb/core.c])
 AC_CONFIG_HEADERS([config.h])
@@ -25,6 +25,20 @@ AC_SUBST(LIBUSB01_VERSION)
 PKG_CHECK_MODULES([LIBUSB_1_0], libusb-1.0 >= 0.9.1)
 AC_SUBST(LIBUSB_1_0_CFLAGS)
 AC_SUBST(LIBUSB_1_0_LIBS)
+
+# Checks for dynamic loading of libusb-1.0
+ac_save_LIBS="$LIBS"
+AC_CHECK_HEADER([dlfcn.h], [
+	AC_CHECK_LIB([dl], [dlopen], [
+		AC_CHECK_LIB([dl], [dlsym], [
+			AU_CHECK_LIB_SONAME([LIBUSB_1_0], [usb-1.0], [libusb_open])])])])
+LIBS="$ac_save_LIBS"
+if test x"$LIBUSB_1_0_SONAME" != x ; then
+	AC_DEFINE_UNQUOTED([LIBUSB_1_0_SONAME], ["$LIBUSB_1_0_SONAME"], [SONAME of libusb-1.0. If defined, libusb-1.0 can be hidden.])
+fi
+AM_CONDITIONAL([USE_LIBUSB_1_0_DLOAD], [test x"$LIBUSB_1_0_SONAME" != x])
+
+AU_HAVE_GNU_ERRNO_H
 
 # Message logging
 AC_ARG_ENABLE([log], [AS_HELP_STRING([--disable-log], [disable all logging])],

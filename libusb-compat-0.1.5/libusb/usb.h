@@ -2,6 +2,7 @@
  * Prototypes, structure definitions and macros.
  *
  * Copyright (c) 2000-2003 Johannes Erdfelt <johannes@erdfelt.com>
+ * Copyright (c) 2015      Nathan Hjelm <hjelmn@cs.unm.edu>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,14 +23,27 @@
  * distribution for details.
  */
 
-#ifndef __USB_H__
-#define __USB_H__
+#ifndef USB_H
+#define USB_H
 
 #include <unistd.h>
 #include <stdlib.h>
 #include <limits.h>
 
 #include <dirent.h>
+
+#ifdef interface
+#undef interface
+#endif
+
+/* stdint.h is not available on older MSVC */
+#if defined(_MSC_VER) && (_MSC_VER < 1600) && (!defined(_STDINT)) && (!defined(_STDINT_H))
+typedef unsigned __int8   uint8_t;
+typedef unsigned __int16  uint16_t;
+typedef unsigned __int32  uint32_t;
+#else
+#include <stdint.h>
+#endif
 
 /*
  * USB spec information
@@ -78,40 +92,40 @@
 
 /* All standard descriptors have these 2 fields in common */
 struct usb_descriptor_header {
-	int8_t  bLength;
-	int8_t  bDescriptorType;
+	uint8_t  bLength;
+	uint8_t  bDescriptorType;
 };
 
 /* String descriptor */
 struct usb_string_descriptor {
-	int8_t  bLength;
-	int8_t  bDescriptorType;
-	int16_t wData[1];
+	uint8_t  bLength;
+	uint8_t  bDescriptorType;
+	uint16_t wData[1];
 };
 
 /* HID descriptor */
 struct usb_hid_descriptor {
-	int8_t  bLength;
-	int8_t  bDescriptorType;
-	int16_t bcdHID;
-	int8_t  bCountryCode;
-	int8_t  bNumDescriptors;
-	/* int8_t  bReportDescriptorType; */
-	/* int16_t wDescriptorLength; */
+	uint8_t  bLength;
+	uint8_t  bDescriptorType;
+	uint16_t bcdHID;
+	uint8_t  bCountryCode;
+	uint8_t  bNumDescriptors;
+	/* uint8_t  bReportDescriptorType; */
+	/* uint16_t wDescriptorLength; */
 	/* ... */
 };
 
 /* Endpoint descriptor */
 #define USB_MAXENDPOINTS	32
 struct usb_endpoint_descriptor {
-	int8_t  bLength;
-	int8_t  bDescriptorType;
-	int8_t  bEndpointAddress;
-	int8_t  bmAttributes;
-	int16_t wMaxPacketSize;
-	int8_t  bInterval;
-	int8_t  bRefresh;
-	int8_t  bSynchAddress;
+	uint8_t  bLength;
+	uint8_t  bDescriptorType;
+	uint8_t  bEndpointAddress;
+	uint8_t  bmAttributes;
+	uint16_t wMaxPacketSize;
+	uint8_t  bInterval;
+	uint8_t  bRefresh;
+	uint8_t  bSynchAddress;
 
 	unsigned char *extra;	/* Extra descriptors */
 	int extralen;
@@ -129,15 +143,15 @@ struct usb_endpoint_descriptor {
 /* Interface descriptor */
 #define USB_MAXINTERFACES	32
 struct usb_interface_descriptor {
-	int8_t  bLength;
-	int8_t  bDescriptorType;
-	int8_t  bInterfaceNumber;
-	int8_t  bAlternateSetting;
-	int8_t  bNumEndpoints;
-	int8_t  bInterfaceClass;
-	int8_t  bInterfaceSubClass;
-	int8_t  bInterfaceProtocol;
-	int8_t  iInterface;
+	uint8_t  bLength;
+	uint8_t  bDescriptorType;
+	uint8_t  bInterfaceNumber;
+	uint8_t  bAlternateSetting;
+	uint8_t  bNumEndpoints;
+	uint8_t  bInterfaceClass;
+	uint8_t  bInterfaceSubClass;
+	uint8_t  bInterfaceProtocol;
+	uint8_t  iInterface;
 
 	struct usb_endpoint_descriptor *endpoint;
 
@@ -155,14 +169,14 @@ struct usb_interface {
 /* Configuration descriptor information.. */
 #define USB_MAXCONFIG		8
 struct usb_config_descriptor {
-	int8_t  bLength;
-	int8_t  bDescriptorType;
-	int16_t wTotalLength;
-	int8_t  bNumInterfaces;
-	int8_t  bConfigurationValue;
-	int8_t  iConfiguration;
-	int8_t  bmAttributes;
-	int8_t  MaxPower;
+	uint8_t  bLength;
+	uint8_t  bDescriptorType;
+	uint16_t wTotalLength;
+	uint8_t  bNumInterfaces;
+	uint8_t  bConfigurationValue;
+	uint8_t  iConfiguration;
+	uint8_t  bmAttributes;
+	uint8_t  MaxPower;
 
 	struct usb_interface *interface;
 
@@ -172,28 +186,28 @@ struct usb_config_descriptor {
 
 /* Device descriptor */
 struct usb_device_descriptor {
-	int8_t  bLength;
-	int8_t  bDescriptorType;
-	int16_t bcdUSB;
-	int8_t  bDeviceClass;
-	int8_t  bDeviceSubClass;
-	int8_t  bDeviceProtocol;
-	int8_t  bMaxPacketSize0;
-	int16_t idVendor;
-	int16_t idProduct;
-	int16_t bcdDevice;
-	int8_t  iManufacturer;
-	int8_t  iProduct;
-	int8_t  iSerialNumber;
-	int8_t  bNumConfigurations;
+	uint8_t  bLength;
+	uint8_t  bDescriptorType;
+	uint16_t bcdUSB;
+	uint8_t  bDeviceClass;
+	uint8_t  bDeviceSubClass;
+	uint8_t  bDeviceProtocol;
+	uint8_t  bMaxPacketSize0;
+	uint16_t idVendor;
+	uint16_t idProduct;
+	uint16_t bcdDevice;
+	uint8_t  iManufacturer;
+	uint8_t  iProduct;
+	uint8_t  iSerialNumber;
+	uint8_t  bNumConfigurations;
 };
 
 struct usb_ctrl_setup {
-	int8_t  bRequestType;
-	int8_t  bRequest;
-	int16_t wValue;
-	int16_t wIndex;
-	int16_t wLength;
+	uint8_t  bRequestType;
+	uint8_t  bRequest;
+	uint16_t wValue;
+	uint16_t wIndex;
+	uint16_t wLength;
 };
 
 /*
@@ -254,7 +268,7 @@ struct usb_device {
 
   void *dev;		/* Darwin support */
 
-  int8_t devnum;
+  uint8_t devnum;
 
   unsigned char num_children;
   struct usb_device **children;
@@ -266,7 +280,7 @@ struct usb_bus {
   char dirname[PATH_MAX + 1];
 
   struct usb_device *devices;
-  int32_t location;
+  uint32_t location;
 
   struct usb_device *root_dev;
 };
