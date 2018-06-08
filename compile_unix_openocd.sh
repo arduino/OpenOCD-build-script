@@ -55,8 +55,7 @@ export LIBUSB_1_0_LIBS="-L$LIBUSB_DIR/libusb/.libs/ -lusb-1.0 -lpthread"
 
 cd libusb-compat-0.1.5
 export LIBUSB0_DIR=`pwd`
-#autoreconf
-./bootstrap.sh
+autoreconf
 ./configure --enable-static --disable-shared
 make clean
 make
