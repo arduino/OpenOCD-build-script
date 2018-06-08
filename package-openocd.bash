@@ -27,6 +27,8 @@ fi
 ./make_prereq.sh
 export PATH=$PWD/tools/bin:$PATH
 
+which automake
+
 if [[ $CROSS_COMPILE == "mingw" ]] ; then
 
 ./compile_win_openocd.sh
