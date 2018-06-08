@@ -1,7 +1,9 @@
+/* -*- Mode: C; c-basic-offset:8 ; indent-tabs-mode:t -*- */
 /*
  * Core functions for libusb-compat-0.1
  * Copyright (C) 2008 Daniel Drake <dsd@gentoo.org>
  * Copyright (c) 2000-2003 Johannes Erdfelt <johannes@erdfelt.com>
+ * Copyright (c) 2014-2016 Nathan Hjelm <hjelmn@cs.unm.edu>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,7 +23,6 @@
 #include <config.h>
 #include <errno.h>
 #include <stdarg.h>
-#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -29,6 +30,19 @@
 
 #include "usb.h"
 #include "usbi.h"
+
+/* this is a workaround since some legacy apps have borrowed libusb's
+ * namespace. */
+#ifdef LIBUSB_1_0_SONAME
+#include "libusb-dload.h"
+#else
+#define dl_libusb_get_string_descriptor libusb_get_string_descriptor
+#define dl_libusb_get_descriptor libusb_get_descriptor
+#endif
+
+#ifndef ENODATA
+#define ENODATA EIO
+#endif
 
 static libusb_context *ctx = NULL;
 static int usb_debug = 0;
@@ -59,6 +73,24 @@ enum usbi_log_level {
 API_EXPORTED struct usb_bus *usb_busses = NULL;
 
 #define compat_err(e) -(errno=libusb_to_errno(e))
+
+#ifdef LIBUSB_1_0_SONAME
+static void __attribute__ ((constructor)) _usb_init (void)
+{
+	libusb_dl_init ();
+}
+#endif
+
+static void __attribute__ ((destructor)) _usb_exit (void)
+{
+	if (ctx) {
+		libusb_exit (ctx);
+		ctx = NULL;
+	}
+#ifdef LIBUSB_1_0_SONAME
+	libusb_dl_exit ();
+#endif
+}
 
 static int libusb_to_errno(int result)
 {
@@ -137,13 +169,6 @@ static void usbi_log(enum usbi_log_level level, const char *function,
 	fprintf(stream, "\n");
 }
 
-static void _usb_finalize(void) {
-       if (ctx) {
-          libusb_exit(ctx);
-               ctx = NULL;
-               }
-}
-
 API_EXPORTED void usb_init(void)
 {
 	int r;
@@ -159,8 +184,6 @@ API_EXPORTED void usb_init(void)
 		/* usb_set_debug can be called before usb_init */
 		if (usb_debug)
 			libusb_set_debug(ctx, 3);
-
-               atexit(_usb_finalize);
 	}
 }
 
@@ -866,7 +889,7 @@ API_EXPORTED int usb_get_string(usb_dev_handle *dev, int desc_index, int langid,
 	char *buf, size_t buflen)
 {
 	int r;
-	r = libusb_get_string_descriptor(dev->handle, desc_index & 0xff,
+	r = dl_libusb_get_string_descriptor(dev->handle, desc_index & 0xff,
 		langid & 0xffff, buf, (int) buflen);
 	if (r >= 0)
 		return r;
@@ -888,7 +911,7 @@ API_EXPORTED int usb_get_descriptor(usb_dev_handle *dev, unsigned char type,
 	unsigned char desc_index, void *buf, int size)
 {
 	int r;
-	r = libusb_get_descriptor(dev->handle, type, desc_index, buf, size);
+	r = dl_libusb_get_descriptor(dev->handle, type, desc_index, buf, size);
 	if (r >= 0)
 		return r;
 	return compat_err(r);
@@ -918,7 +941,7 @@ API_EXPORTED int usb_get_driver_np(usb_dev_handle *dev, int interface,
 		snprintf(name, namelen, "dummy");
 		return 0;
 	} else if (r == 0) {
-		return -(errno=EINVAL);
+		return -(errno=ENODATA);
 	} else {
 		return compat_err(r);
 	}
@@ -931,7 +954,7 @@ API_EXPORTED int usb_detach_kernel_driver_np(usb_dev_handle *dev, int interface)
 	case LIBUSB_SUCCESS:
 		return 0;
 	case LIBUSB_ERROR_NOT_FOUND:
-		return -EINVAL;
+		return -ENODATA;
 	case LIBUSB_ERROR_INVALID_PARAM:
 		return -EINVAL;
 	case LIBUSB_ERROR_NO_DEVICE:
