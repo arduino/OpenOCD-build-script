@@ -25,7 +25,7 @@ cd libtool-2.4.6
 ./configure --prefix=$PREFIX
 make install
 cd ..
-wget --no-check-certificate https://pkgconfig.freedesktop.org/releases/pkg-confif-0.29.2.tar.gz
+wget --no-check-certificate https://pkgconfig.freedesktop.org/releases/pkg-config-0.29.2.tar.gz
 cd pkg-config-0.29.2
 ./configure --prefix=$PREFIX
 make install
