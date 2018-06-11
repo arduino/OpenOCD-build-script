@@ -20,37 +20,18 @@ OUTPUT_VERSION=0.10.0-arduino7-static
 export OS=`uname -o || uname`
 export TARGET_OS=$OS
 
-if [ -d tools ]; then
-rm -rf tools
+if [ x$CROSS_COMPILER == x ]; then
+CROSS_COMPILER=${CROSS_COMPILE}-gcc
 fi
 
-./make_prereq.sh
-export PATH=$PWD/tools/bin:$PATH
+OUTPUT_TAG=`$CROSS_COMPILER -v 2>&1 | awk '/Target/ { print $2 }'`
 
-which automake
-
-if [[ $CROSS_COMPILE == "mingw" ]] ; then
-
-./compile_win_openocd.sh
-
-else
-
-./compile_unix_openocd.sh
-
-fi
-
-rm -f *.zip
-rm -f *.bz2
+./compile_cross.sh
 
 cd distrib
-OUTPUT_TAG=`ls`
-if [[ $CROSS_COMPILE == "mingw" ]] ; then
+if [[ $CROSS_COMPILE == *mingw* ]] ; then
 zip -r ../openocd-${OUTPUT_VERSION}-${OUTPUT_TAG}.zip *
 else
 tar -cjvf ../openocd-${OUTPUT_VERSION}-${OUTPUT_TAG}.tar.bz2 *
 fi
 cd -
-
-
-
-
