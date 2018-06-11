@@ -64,8 +64,7 @@ export LIBUSB_1_0_LIBS="-L$LIBUSB_DIR/libusb/.libs/ -lusb-1.0 -lpthread"
 
 cd libusb-compat-0.1.5
 export LIBUSB0_DIR=`pwd`
-automake --add-missing
-autoreconf
+./bootstrap.sh
 ./configure --enable-static --disable-shared --host=${CROSS_COMPILE}
 make clean
 make
