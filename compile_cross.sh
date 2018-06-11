@@ -102,7 +102,7 @@ export LIBUSB0_LIBS="-L$LIBUSB0_DIR/libusb/.libs/ -lusb -lpthread"
 export LIBUSB1_CFLAGS="-I$LIBUSB_DIR/libusb/" 
 export LIBUSB1_LIBS="-L$LIBUSB_DIR/libusb/.libs/ -lusb-1.0 -lpthread" 
 export LIBFTDI_CFLAGS="-I$LIBFTDI1_DIR/src/"
-export LIBFTDI_LIBS="-L$LIBFTDI1_DIR/src/ -lftdi1 -lpthread"
+export LIBFTDI_LIBS="-L$LIBFTDI1_DIR/build/src/ -lftdi1 -lpthread"
 export HIDAPI_CFLAGS="-I$HIDAPI_DIR/hidapi/"
 
 if [[ ${ARCH} == *linux* ]]; then
