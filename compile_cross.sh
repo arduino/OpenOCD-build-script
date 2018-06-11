@@ -17,6 +17,8 @@
 
 if [ x$CROSS_COMPILER == x ]; then
 CROSS_COMPILER=${CROSS_COMPILE}-gcc
+else
+export CC=$CROSS_COMPILER
 fi
 
 ARCH=`$CROSS_COMPILER -v 2>&1 | awk '/Target/ { print $2 }'`
