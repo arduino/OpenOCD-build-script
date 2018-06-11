@@ -90,9 +90,9 @@ rm -rf build
 fi
 mkdir build && cd build
 cmake -DCMAKE_C_COMPILER=${CROSS_COMPILER} -DBUILD_TESTS=no -DDOCUMENTATION=no -DEXAMPLES=no -DFTDIPP=no -DFTDI_EEPROM=no -DLINK_PYTHON_LIBRARY=no -DPYTHON_BINDINGS=no -DCMAKE_INSTALL_PREFIX=$LIBFTDI1_DIR ..
-cd ..
 make clean
 make ftdi1-static
+cd ..
 cd ..
 
 cd OpenOCD
