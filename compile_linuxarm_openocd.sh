@@ -14,7 +14,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-ARCH=`arm-linux-gnueabihf-gcc -v 2>&1 | awk '/Target/ { print $2 }'`
+
+if [ x$CROSS_COMPILER == x ]; then
+CROSS_COMPILER=${CROSS_COMPILE}-gcc
+fi
+
+ARCH=`$CROSS_COMPILER -v 2>&1 | awk '/Target/ { print $2 }'`
 
 mkdir -p distrib/$ARCH
 cd  distrib/$ARCH
@@ -24,12 +29,16 @@ cd -
 #disable pkg-config
 export PKG_CONFIG_PATH=`pwd`
 
-if [[ ${ARCH} != *darwin* ]]; then
+if [[ ${ARCH} == *mingw* ]]; then
+export CFLAGS="-mno-ms-bitfields"
+fi
+
+if [[ ${ARCH} == *linux* ]]; then
 
 cd eudev-3.1.5
 export UDEV_DIR=`pwd`
 ./autogen.sh
-./configure --enable-static --disable-shared --disable-blkid --disable-kmod  --disable-manpages --host=arm-linux-gnueabihf
+./configure --enable-static --disable-shared --disable-blkid --disable-kmod  --disable-manpages --host=${CROSS_COMPILE}
 make clean
 make -j4
 cd ..
@@ -42,7 +51,7 @@ fi
 
 cd libusb-1.0.20
 export LIBUSB_DIR=`pwd`
-./configure --enable-static --disable-shared --host=arm-linux-gnueabihf
+./configure --enable-static --disable-shared --host=${CROSS_COMPILE}
 make clean
 make
 cd ..
@@ -57,7 +66,7 @@ cd libusb-compat-0.1.5
 export LIBUSB0_DIR=`pwd`
 automake --add-missing
 autoreconf
-./configure --enable-static --disable-shared --host=arm-linux-gnueabihf
+./configure --enable-static --disable-shared --host=${CROSS_COMPILE}
 make clean
 make
 cd ..
@@ -70,7 +79,7 @@ export libudev_LIBS="-L$UDEV_DIR/src/libudev/.libs/ -ludev"
 cd hidapi
 ./bootstrap
 export HIDAPI_DIR=`pwd`
-./configure --enable-static --disable-shared --host=arm-linux-gnueabihf
+./configure --enable-static --disable-shared --host=${CROSS_COMPILE}
 make clean
 make -j4
 cd ..
@@ -81,7 +90,7 @@ if [ -d build ]; then
 rm -rf build
 fi
 mkdir build && cd build
-cmake -DCMAKE_C_COMPILER=arm-linux-gnueabihf-gcc -DBUILD_TESTS=no -DDOCUMENTATION=no -DEXAMPLES=no -DFTDIPP=no -DFTDI_EEPROM=no -DLINK_PYTHON_LIBRARY=no -DPYTHON_BINDINGS=no -DCMAKE_INSTALL_PREFIX=$LIBFTDI1_DIR ..
+cmake -DCMAKE_C_COMPILER=${CROSS_COMPILER} -DBUILD_TESTS=no -DDOCUMENTATION=no -DEXAMPLES=no -DFTDIPP=no -DFTDI_EEPROM=no -DLINK_PYTHON_LIBRARY=no -DPYTHON_BINDINGS=no -DCMAKE_INSTALL_PREFIX=$LIBFTDI1_DIR ..
 cd ..
 make clean
 make ftdi1-static
@@ -97,23 +106,30 @@ export LIBFTDI_CFLAGS="-I$LIBFTDI1_DIR/src/"
 export LIBFTDI_LIBS="-L$LIBFTDI1_DIR/src/ -lftdi1 -lpthread"
 export HIDAPI_CFLAGS="-I$HIDAPI_DIR/hidapi/"
 
-if [[ ${ARCH} != *darwin* ]]; then
+if [[ ${ARCH} == *linux* ]]; then
+export HIDAPI_LIBS="-L$HIDAPI_DIR/linux/.libs/ -L$HIDAPI_DIR/libusb/.libs/ -lhidapi-hidraw -lhidapi-libusb"
+fi
 
-export HIDAPI_LIBS="-L$HIDAPI_DIR/linux/.libs/ -L$HIDAPI_DIR/libusb/.libs/ -lhidapi-hidraw -lhidapi-libusb" 
-
-else
-
+if [[ ${ARCH} == *darwin* ]]; then
 export HIDAPI_LIBS="-L$HIDAPI_DIR/mac/.libs/ -L$HIDAPI_DIR/libusb/.libs/ -lhidapi"
 fi
 
-OPENOCD_COMPILE_SWITCHES="--enable-remote-bitbang --enable-stlink --enable-usb-blaster-2 --enable-ti-icdi --enable-jlink --enable-usbprog --enable-cmsis-dap --enable-jtag_vpi --enable-ioutil"
+if [[ ${ARCH} == *mingw* ]]; then
+export HIDAPI_LIBS="-L$HIDAPI_DIR/windows/.libs/ -L$HIDAPI_DIR/libusb/.libs/ -lhidapi"
+fi
 
-if [[ ${ARCH} != *darwin* ]]; then
+if [[ ${ARCH} == *mingw* ]]; then
+OPENOCD_COMPILE_SWITCHES="--enable-remote-bitbang --enable-stlink --enable-usb-blaster-2 --enable-ti-icdi --enable-jlink --enable-usbprog --enable-cmsis-dap"
+else
+OPENOCD_COMPILE_SWITCHES="--enable-remote-bitbang --enable-stlink --enable-usb-blaster-2 --enable-ti-icdi --enable-jlink --enable-usbprog --enable-cmsis-dap --enable-jtag_vpi --enable-ioutil"
+fi
+
+if [[ ${ARCH} == *linux* ]]; then
 OPENOCD_COMPILE_SWITCHES="$OPENOCD_COMPILE_SWITCHES --enable-sysfsgpio"
 fi
 
 export CFLAGS="-DHAVE_LIBUSB_ERROR_NAME"
-PKG_CONFIG_PATH=`pwd` ./configure $OPENOCD_COMPILE_SWITCHES --disable-werror --prefix=$PREFIX --host=arm-linux-gnueabihf
+PKG_CONFIG_PATH=`pwd` ./configure $OPENOCD_COMPILE_SWITCHES --disable-werror --prefix=$PREFIX --host=${CROSS_COMPILE}
 make clean
 CFLAGS=-static make
 make install
