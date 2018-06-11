@@ -102,6 +102,10 @@ make ftdi1-static
 cd ..
 cd ..
 
+if [[ ${ARCH} == *darwin* ]]; then
+x86_64-apple-darwin13-ranlib $LIBFTDI1_DIR/build/src/libftdi1.a
+fi
+
 cd OpenOCD
 ./bootstrap
 export LIBUSB0_CFLAGS="-I$LIBUSB0_DIR/libusb/" 
