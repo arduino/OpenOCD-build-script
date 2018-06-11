@@ -30,8 +30,8 @@ OUTPUT_TAG=`$CROSS_COMPILER -v 2>&1 | awk '/Target/ { print $2 }'`
 
 cd distrib
 if [[ $CROSS_COMPILE == *mingw* ]] ; then
-zip -r ../openocd-${OUTPUT_VERSION}-${OUTPUT_TAG}.zip *
+zip -r ../openocd-${OUTPUT_VERSION}-${OUTPUT_TAG}.zip ${OUTPUT_TAG}
 else
-tar -cjvf ../openocd-${OUTPUT_VERSION}-${OUTPUT_TAG}.tar.bz2 *
+tar -cjvf ../openocd-${OUTPUT_VERSION}-${OUTPUT_TAG}.tar.bz2 ${OUTPUT_TAG}
 fi
 cd -
